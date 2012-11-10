@@ -15,49 +15,6 @@ class DNA
 		end
 	end
 	def get_failure_array
-		# failure_array = Hash.new()
-		# j = 0
-		# begin
-		# 	failure_array[j] = 0
-		# 	j += 1
-		# end while j < @string.length
-		# j = 0
-		# i = 4
-		# while j < i
-		# 	i = 2 * j
-		# 	if (i == 0 or i == 2)
-		# 		i = 4
-		# 	end
-		# 	while i < @string.length
-		# 		h = j
-		# 		count = 0
-		# 		should_update = true
-		# 		while h <= j
-		# 			if @string[h] == @string[i-j+h]
-		# 				count += 1
-		# 			else
-		# 				h = j
-		# 			end
-		# 			h += 1
-		# 		end
-		# 		if should_update
-		# 			failure_array[i] += count
-		# 		end
-		# 		i += 1
-		# 	end
-		# 	j += 1
-		# end
-		# string = ''
-		# sorted_values = failure_array.sort
-		# sorted_values.each do |key, val|
-		# 	string += "#{val} "
-		# end
-		# string
-
-
-
-
-
 		string = ''
 		failure_array = Hash.new()
 		j = 0
@@ -82,7 +39,74 @@ class DNA
 			string += "#{val} "
 		end
 		string
-
+	end
+	# credits go to http://computersciencesource.wordpress.com/2011/01/03/string-searching-the-knuth-morris-pratt-algorithm/
+	def kmp_table()
+		w = @string
+		i = 2
+		sub = 0
+		t = [-1, 0]
+		wlen = w.length
+		while i < wlen
+			if w[i-1] == w[sub]
+				sub += 1
+				t[i] = sub
+				i += 1
+			elsif sub > 0
+				sub = t[sub]
+			else
+				t[i] = 0
+				i += 1
+			end
+		end
+		t
+	end
+	def kmp_search(w)
+		m = i = 0
+		s = @string
+		slen = s.length
+		wlen = w.length
+		t = self.kmp_table()
+		while m + i < slen
+			if w[i] == s[m+i]
+				i += 1
+				return m  if i == wlen
+			else
+				m += i - t[i]
+				i = [0, t[i]].max
+			end
+		end
+		-1
+	end
+	def get_common_substrings(dna)
+		string = @string
+		length = 0
+		comparing_string = dna.get_string
+		i = 0
+		matching_strings = Array.new()
+		while i < string.length
+			j = i + 1
+			while j < string.length
+				testing_string = string[i..j]
+				# pp testing_string
+				if dna.kmp_search(testing_string) != -1
+					matching_strings.push(testing_string)
+				end
+				j += 1
+			end
+			i += 1
+		end
+		# sorted_matching_strings = Hash.new([])
+		# # arr = matching_strings.sort_by {|x| x.length}
+		# prev_length = 0
+		# matching_strings.each do |s|
+		# 	if sorted_matching_strings[s.length] != []
+		# 		sorted_matching_strings[s.length].push(s)
+		# 	elsif !sorted_matching_strings[s.length].include?(s)
+		# 		sorted_matching_strings[s.length] = [s]
+		# 	end
+		# end
+		# sorted_matching_strings
 	end
 	def get_rna()
 		@string.gsub(/(T)/, 'U')

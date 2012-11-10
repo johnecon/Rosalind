@@ -12,6 +12,24 @@ class Matrix
 		end
 		counter
 	end
+	def longest_common_substr()
+		strings = Array.new
+		@dnas.each do |dna|
+			strings.push(dna.get_string)
+		end
+		shortest = strings.min_by {|x| x.length}
+		maximum_length = shortest.length
+		i = maximum_length
+		while i >= 1
+			j = 0
+			while j<= maximum_length - i
+				substr = shortest[j,i]
+				return substr if strings.all?{|str| str.include? substr }
+				j += 1
+			end
+			i -= 1
+		end
+	end
 	def scan_dnas_and_set_labels
 		@labels = ''
 		winner = Hash.new
