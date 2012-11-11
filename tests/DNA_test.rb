@@ -14,4 +14,15 @@ class TestDNA < Test::Unit::TestCase
 	def test_kmp_search
 		assert_equal 5, DNA.new('abracabracadabra').kmp_search('abracadabra')
 	end
+	def test_perm
+		permutations = ('T A G C').split(' ').repeated_permutation(2).to_a
+		assert_equal [["T", "T"], ["T", "A"], ["T", "G"],
+		["T", "C"], ["A", "T"], ["A", "A"], ["A", "G"],
+		["A", "C"], ["G", "T"], ["G", "A"], ["G", "G"],
+		["G", "C"], ["C", "T"], ["C", "A"], ["C", "G"], ["C", "C"]], permutations
+	end
+	def test_orf
+		dna = DNA.new('AGCCATGTAGCTAACTCAGGTTACATGGGGATGACCCCGCGACTTGGATTAGAGTCTCTTTTGGAATAAGCCTGAATGATCCGAGTAGCATCTCAG')
+		assert_equal '', dna.orf
+	end
 end

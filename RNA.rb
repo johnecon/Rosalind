@@ -1,6 +1,21 @@
 class RNA
 	attr_accessor :rna_codon_table, :protein_string
-	def rna_codon_table
+	def initialize(protein_string = nil)
+		if (protein_string)
+			@protein_string = protein_string
+		end
+	end
+	def number_of_possible_rna_translations
+		@rna_codon_table = self.class.rna_codon_table
+		number_of_possible_rna_translations = 1
+		codon_array = @rna_codon_table.values
+		@protein_string.each_char do |char|
+			number_of_possible_rna_translations *= codon_array.count(char)
+		end
+		number_of_possible_rna_translations = number_of_possible_rna_translations * 3
+		number_of_possible_rna_translations % 1000000
+	end
+	def self.rna_codon_table
 		if @rna_codon_table
 			return @rna_codon_table
 		else

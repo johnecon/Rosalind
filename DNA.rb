@@ -1,3 +1,4 @@
+require '~/project/Rosalind/RNA.rb'
 class DNA
 	attr_accessor :string, :reverse, :reverse_complement, :fasta_prefix
 	def initialize(string = nil)
@@ -62,8 +63,8 @@ class DNA
 		t
 	end
 	def kmp_search(w)
-		m = i = 0
 		s = @string
+		m = i = 0
 		slen = s.length
 		wlen = w.length
 		t = self.kmp_table()
@@ -128,5 +129,35 @@ class DNA
 	end
 	def get_last(k)
 		@string[-k,k]
+	end
+	def orf
+		condon_table = RNA.rna_codon_table
+		write_mode = false
+		length = @string.length
+		string = @string.gsub(/(T)/, 'U')
+		j = 0
+		buffer = Array.new
+		out = Array.new
+		starting_condon = 'AUG'
+		0.upto(2) do |h|
+			i = 0 + h
+			while i <= length
+				testing_string = string[i..(i + 2)]
+				if condon_table[testing_string] == '' and buffer != [] and write_mode
+					out.push(buffer)
+					buffer = []
+					j = 0
+					write_mode = false
+				elsif testing_string == starting_condon and !write_mode
+					write_mode = true
+				end
+				if write_mode
+					buffer[j] = condon_table[testing_string]
+					j += 1
+				end
+				i += 3
+			end
+		end
+		out
 	end
 end
