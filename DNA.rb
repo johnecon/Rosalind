@@ -15,6 +15,24 @@ class DNA
 			return @string.count(char)
 		end
 	end
+	def self.is_reverse_palindrome(string)
+		string == string.reverse.gsub(/(T)/, 'a').gsub(/(A)/, 't').gsub(/(C)/, 'g').gsub(/(G)/, 'c').gsub(/(a)/, 'A').gsub(/(t)/, 'T').gsub(/(g)/, 'G').gsub(/(c)/, 'C')
+	end
+	def revp
+		revp = []
+		0.upto(@string.length) do |i|
+			3.upto(7) do |j|
+				revp.push([i + 1, j + 1]) if ((DNA.is_reverse_palindrome(@string[i..(i+j)]) and ((i + j) < @string.length)))
+			end
+		end
+		# revp.each do |r|
+		# 	print r[0]
+		# 	print ' '
+		# 	print r[1]
+		# 	puts ''
+		# end
+		revp
+	end
 	def get_failure_array
 		string = ''
 		failure_array = Hash.new()
